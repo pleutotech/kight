@@ -3,8 +3,9 @@ Kight can be used to generate a simple express-typescript project with the datab
 
 #### Installation
 1. Clone the repo: `git clone https://github.com/pleutotech/kight.git`
-2. Install Dependencies: `npm install`
-3. Install Kight: `npm install -g .`
+2. Change directory: `cd kight`
+3. Install Dependencies: `npm install`
+4. Install Kight: `npm install -g .`
 
 #### Usage
 ```
