@@ -1,0 +1,23 @@
+{
+  "name": "kight",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "kight": "src/main.js"
+  },
+  "keywords": [],
+  "author": "Pleuto Tech",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0"
+  }
+}
