@@ -1,0 +1,39 @@
+import type { Request, Response } from "express";
+import ApiResponse from "../../utils/api_response.util.js";
+import type { IUser } from "../../models/user.model.js";
+import UserModel from "../../models/user.model.js";
+import JwtUtil from "../../utils/jwt.util.js";
+import bcrypt from "bcryptjs";
+
+export default class UserController {
+    static async create(req: Request, res: Response) {
+        try {
+            const data: Partial<IUser> = req.body;
+            const newUser = new UserModel(data);
+            await newUser.save();
+            
+            ApiResponse.success(res, newUser, "user created");
+        }
+        catch(ex) {
+            ApiResponse.failure(res, ex);
+        }
+    }
+
+    static async login(req: Request, res: Response) {
+        try {
+            const { email, password }: {email: string, password: string} = req.body;
+            
+            const user = await UserModel.findOne({ email });
+            if(!user) throw new Error("User not found");
+
+            const isPasswordCorrect = await bcrypt.compare(password, user.password);
+            if(!isPasswordCorrect) throw new Error("Incorrect email or password");
+
+            const token = JwtUtil.createToken({ userId: user._id.toString() });
+            ApiResponse.success(res, token, "logged in successfully");
+        }
+        catch(ex) {
+            ApiResponse.failure(res, ex);
+        }
+    }
+}

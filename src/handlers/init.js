@@ -8,12 +8,16 @@ import path from "path";
  * @param {any} options 
  */
 const getBackendFiles = (options) => {
+  const now = new Date();
+  const timestamp = `${now.getFullYear()}${now.getMonth().toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
+
   let files = [];
   files.push({ templatePath: "src/templates/.gitignore.hbs", filePath: ".gitignore" });
   files.push({ templatePath: "src/templates/nodemon.json.hbs", filePath: "nodemon.json" });
   files.push({ templatePath: "src/templates/package.json.hbs", filePath: "package.json" });
   files.push({ templatePath: "src/templates/routes.ts.hbs", filePath: "src/api/routes.ts" });
   files.push({ templatePath: "src/templates/tsconfig.json.hbs", filePath: "tsconfig.json" });
+  files.push({ templatePath: "src/templates/api_response.util.ts.hbs", filePath: "src/utils/api_response.util.ts" });
 
   if(options.mongo) {
     files.push({ templatePath: "src/templates/.env_mongo.hbs", filePath: ".env" });
@@ -30,6 +34,20 @@ const getBackendFiles = (options) => {
 
   if(options.auth) {
     files.push({ templatePath: "src/templates/auth/jwt.util.ts.hbs", filePath: "src/utils/jwt.util.ts" });
+    files.push({ templatePath: "src/templates/auth/jwt_auth.middleware.ts.hbs", filePath: "src/middlewares/jwt_auth.middleware.ts" });
+    files.push({ templatePath: "src/templates/auth/user.routes.ts.hbs", filePath: "src/api/user/user.routes.ts" });
+    files.push({ templatePath: "src/templates/auth/express.d.ts.hbs", filePath: "types/express.d.ts" });
+
+    if(options.mongo) {
+      files.push({ templatePath: "src/templates/auth/mongo/user.controller.ts.hbs", filePath: "src/api/user/user.controller.ts" });
+      files.push({ templatePath: "src/templates/auth/mongo/user.model.ts.hbs", filePath: "src/models/user.model.ts" });
+    }
+
+    if(options.postgres) {
+      files.push({ templatePath: "src/templates/auth/postgres/user.controller.ts.hbs", filePath: "src/api/user/user.controller.ts" });
+      files.push({ templatePath: "src/templates/auth/postgres/user.model.ts.hbs", filePath: "src/models/user.model.ts" });
+      files.push({ templatePath: "src/templates/auth/postgres/user.migration.hbs", filePath: `migrations/${timestamp}-create-users-table.js` });
+    }
   }
 
   return files;
@@ -93,6 +111,17 @@ export default function InitProject(projectName, options) {
   console.log(chalk.greenBright(`Project: ${projectName} generated successfully!\n`));
   console.log(chalk.whiteBright(`Steps to run:`));
   console.log(chalk.whiteBright(`1. cd ${projectName}`));
-  console.log(chalk.whiteBright(`2. npm run dev\n`));
-  console.log(chalk.greenBright("HAVE FUN!"));
+  console.log(chalk.whiteBright(`2. npm run dev`));
+
+  console.log(chalk.yellowBright(`\nNotes:`));
+  console.log(chalk.yellowBright(`- Update the .env accordingly.`));
+  if(options.postgres) {
+    console.log(chalk.yellowBright(`- Change database config in database.json.`));
+    console.log(chalk.yellowBright(`- Migrate the database using \`npx db-migrate up\``));
+  }
+  if(options.auth) {
+    console.log(chalk.yellowBright(`- You have generated the project with --auth, don't forget to import and use the UserRoutes() in api/routes.ts`));
+  }
+
+  console.log(chalk.greenBright("\nHAVE FUN!"));
 }
