@@ -1,26 +1,23 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import InitProject from "./handlers/init_project.js";
+import InitProject from "./handlers/init.js";
 
 const program = new Command();
 
 program
     .name("Kight")
     .description("Fly through projects")
-    .version("0.0.1");
+    .version("0.1.0");
 
 program
     .command("init <projectname>")
     .description("Initializes a new project")
     .option("--postgres", "Use PostgreSQL as the database")
     .option("--mongo", "Use MongoDB as the database")
+    .option("--auth", "Generate Auth code (uses jsonwebtoken and bcryptjs)")
     .action((projectName, options) => {
-        let dbType = "postgres";
-        if(options.mongo) dbType = "mongo";
-        if(options.postgres) dbType = "postgres";
-
-        InitProject(projectName, dbType);
+        InitProject(projectName, options);
     });
 
 program.parse(process.argv);

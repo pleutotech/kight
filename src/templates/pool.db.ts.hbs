@@ -1,0 +1,13 @@
+import { Pool } from "pg";
+import DatabaseConfig from "./../../database.json" with { type: "json" };
+
+const pool = new Pool({
+  host: DatabaseConfig.db.host,
+  port: DatabaseConfig.db.port,
+  user: DatabaseConfig.db.user,
+  password: DatabaseConfig.db.password,
+  database: DatabaseConfig.db.database,
+  ssl: DatabaseConfig.db.ssl,
+});
+
+export default pool;
