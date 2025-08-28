@@ -12,7 +12,7 @@ const getBackendFiles = (options) => {
   const timestamp = `${now.getFullYear()}${now.getMonth().toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
 
   let files = [];
-  files.push({ templatePath: "src/templates/.gitignore.hbs", filePath: ".gitignore" });
+  files.push({ templatePath: "src/templates/gitignore.hbs", filePath: ".gitignore" });
   files.push({ templatePath: "src/templates/nodemon.json.hbs", filePath: "nodemon.json" });
   files.push({ templatePath: "src/templates/package.json.hbs", filePath: "package.json" });
   files.push({ templatePath: "src/templates/routes.ts.hbs", filePath: "src/api/routes.ts" });
@@ -20,12 +20,12 @@ const getBackendFiles = (options) => {
   files.push({ templatePath: "src/templates/api_response.util.ts.hbs", filePath: "src/utils/api_response.util.ts" });
 
   if(options.mongo) {
-    files.push({ templatePath: "src/templates/.env_mongo.hbs", filePath: ".env" });
+    files.push({ templatePath: "src/templates/env_mongo.hbs", filePath: ".env" });
     files.push({ templatePath: "src/templates/server_mongo.ts.hbs", filePath: "src/server.ts" });
   }
   
   if(options.postgres) {
-    files.push({ templatePath: "src/templates/.env.hbs", filePath: ".env" });
+    files.push({ templatePath: "src/templates/env.hbs", filePath: ".env" });
     files.push({ templatePath: "src/templates/database.json.hbs", filePath: "database.json" });
     files.push({ templatePath: "src/templates/pool.db.ts.hbs", filePath: "src/db/pool.db.ts" });
     files.push({ templatePath: "src/templates/server.ts.hbs", filePath: "src/server.ts" });

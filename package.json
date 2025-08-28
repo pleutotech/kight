@@ -1,6 +1,6 @@
 {
   "name": "kight",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Fly through the boilerplate",
   "main": "src/main.js",
   "type": "module",
@@ -26,5 +26,8 @@
   },
   "devDependencies": {
     "@types/node": "^24.3.0"
-  }
+  },
+  "files": [
+    "src/"
+  ]
 }
