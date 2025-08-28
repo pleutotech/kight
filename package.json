@@ -1,6 +1,6 @@
 {
   "name": "kight",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Fly through the boilerplate",
   "main": "src/main.js",
   "type": "module",
@@ -11,9 +11,14 @@
   "bin": {
     "kight": "src/main.js"
   },
-  "keywords": [],
+  "keywords": ["boilerplate generator", "cli", "generator", "scaffolding"],
   "author": "Pleuto Tech",
   "license": "MIT",
+  "homepage": "https://github.com/pleutotech/kight",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pleutotech/kight"
+  },
   "dependencies": {
     "chalk": "^5.6.0",
     "commander": "^14.0.0",

@@ -2,10 +2,9 @@
 Kight can be used to generate a simple express-typescript project with the database of your choice.
 
 #### Installation
-1. Clone the repo: `git clone https://github.com/pleutotech/kight.git`
-2. Change directory: `cd kight`
-3. Install Dependencies: `npm install`
-4. Install Kight: `npm install -g .`
+```
+npm install -g kight
+```
 
 #### Initialize a Project
 ```
