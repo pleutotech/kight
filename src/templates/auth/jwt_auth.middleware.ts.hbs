@@ -1,0 +1,26 @@
+import type { NextFunction, Request, Response } from "express";
+import ApiResponse from "../utils/api_response.util.js";
+import JwtUtil from "../utils/jwt.util.js";
+
+export default function JwtAuth() {
+    return (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const authHeader = req.headers["authorization"];
+            if(!authHeader) throw new Error("auth header not set");
+
+            const tmp = authHeader.split(" ");
+            if(tmp.length != 2) throw new Error("invalid auth header");
+            if(tmp[0] !== "Bearer") throw new Error("invalid auth header");
+
+            const token = tmp[1]!;
+            const payload = JwtUtil.verify(token);
+
+            req.userId = payload.userId;
+
+            next();
+        }
+        catch(ex) {
+            ApiResponse.accessDenied(res);
+        }
+    };
+}

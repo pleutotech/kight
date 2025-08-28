@@ -1,0 +1,17 @@
+import jsonwebtoken from "jsonwebtoken";
+
+export interface IJwtPayload {
+    userId: number|string;
+}
+
+export default class JwtUtil {
+    static createToken(payload: IJwtPayload) : string {
+        const token = jsonwebtoken.sign(payload, process.env.JWT_SECRET!, { expiresIn: "7d" });
+        return token;
+    }
+
+    static verify(token: string) : IJwtPayload {
+        const payload = jsonwebtoken.verify(token, process.env.JWT_SECRET!) as IJwtPayload;
+        return payload;
+    }
+}

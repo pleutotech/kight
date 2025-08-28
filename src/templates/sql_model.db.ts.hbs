@@ -1,0 +1,98 @@
+import type { Pool } from "pg";
+
+const DEFAULT_ROW_LIMIT = 100;
+const DEFAULT_ROW_OFFSET = 0;
+
+interface IFindFilters {
+    where?: string;
+    whereArgs?: any[];
+    limit?: number;
+    offset?: number;
+    orderBy?: string;
+}
+
+interface IFindOneFilters {
+    where?: string;
+    whereArgs?: any[];
+}
+
+export default class SqlModel<T> {
+    private pool: Pool;
+    private tableName: string;
+
+    constructor(pool: Pool, tableName: string) {
+        this.pool = pool;
+        this.tableName = tableName;
+    }
+
+    async find(filters: IFindFilters = {}) : Promise<T[]> {
+        let sql = `SELECT * FROM ${this.tableName}`;
+        if(filters.where) sql += ` WHERE ${filters.where}`;
+        sql += ` LIMIT ${filters.limit || DEFAULT_ROW_LIMIT}`;
+        sql += ` OFFSET ${filters.offset || DEFAULT_ROW_OFFSET}`;
+        if(filters.orderBy) sql += ` ORDER BY ${filters.orderBy}`;
+
+        let args: any[] = [...filters.whereArgs || []];
+
+        const result = await this.pool.query(sql, args);
+        return result.rows;
+    }
+
+    async findById(id: number) : Promise<T|null> {
+        let sql = `SELECT * FROM ${this.tableName} WHERE id=$1`;
+        let args: any[] = [id];
+
+        const result = await this.pool.query(sql, args);
+        if(result.rows.length === 0) return null;
+
+        return result.rows[0];
+    }
+
+    async findOne(filters: IFindOneFilters = {}) : Promise<T|null> {
+        let sql = `SELECT * FROM ${this.tableName}`;
+        if(filters.where) sql += ` WHERE ${filters.where}`;
+        sql += ` LIMIT 1`;
+
+        let args: any[] = [...filters.whereArgs || []];
+
+        const result = await this.pool.query(sql, args);
+        if(result.rows.length === 0) return null;
+
+        return result.rows[0];
+    }
+
+    async insert(data: Partial<T>) : Promise<T|null> {
+        const fields = Object.keys(data).map(key => `${key}`).join(", ");
+        const placeholders = Object.keys(data).map((_, index) => `$${index+1}`).join(", ");
+
+        let sql = `INSERT INTO ${this.tableName}(${fields}) VALUES(${placeholders}) RETURNING *`
+        let args: any[] = [...Object.values(data)];
+
+        const result = await this.pool.query(sql, args);
+        if(result.rows.length === 0) return null;
+
+        return result.rows[0];
+    }
+
+    async findByIdAndUpdate(id: number, data: Partial<T>) : Promise<T|null> {
+        const fields = Object.entries(data).map(([key, _], index) => `${key}=$${index+1}`).join(", ");
+
+        let sql = `UPDATE ${this.tableName} SET ${fields} WHERE id=$${Object.entries(data).length + 1} RETURNING *`;
+        let args: any[] = [...Object.values(data), id];
+
+        const result = await this.pool.query(sql, args);
+        if(result.rows.length === 0) return null;
+
+        return result.rows[0];
+    }
+
+    async findByIdAndDelete(id: number) {
+        let sql = `DELETE FROM ${this.tableName} WHERE id=$1 RETURNING *`;
+        let args: any[] = [id];
+
+        const result = await this.pool.query(sql, args);
+        if(result.rows.length === 0) return null;
+
+        return result.rows[0];
+    }
+}

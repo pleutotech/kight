@@ -1,0 +1,20 @@
+import type { Response } from "express";
+
+export default class ApiResponse {
+    static success(res: Response, data: any, message: string = "") {
+        return res.status(200).json({ success: true, data, message });
+    }
+
+    static failure(res: Response, err: any) {
+        let message = err.toString();
+        if(err instanceof Error) {
+            message = err.message;
+        }
+
+        return res.status(500).json({ success: false, message });
+    }
+
+    static accessDenied(res: Response) {
+        return res.status(401).json({ status: 401, message: "access-denied" });;
+    }
+}

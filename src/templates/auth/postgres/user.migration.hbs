@@ -1,0 +1,36 @@
+'use strict';
+
+var dbm;
+var type;
+var seed;
+
+/**
+  * We receive the dbmigrate dependency from dbmigrate initially.
+  * This enables us to not have to rely on NODE_PATH.
+  */
+export function setup(options, seedLink) {
+  dbm = options.dbmigrate;
+  type = dbm.dataType;
+  seed = seedLink;
+}
+
+export function up(db) {
+  return db.runSql(`
+    CREATE TABLE users(
+      id BIGSERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+}
+
+export function down(db) {
+  return db.runSql(`DROP TABLE users;`);
+}
+
+export const _meta = {
+  "version": 1
+};

@@ -1,0 +1,14 @@
+import pool from "../db/pool.db.js";
+import SqlModel from "../db/sql_model.db.js";
+
+export interface IUser {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    created_on: Date;
+    updated_on: Date;
+}
+
+const UserModel = new SqlModel<IUser>(pool, "users");
+export default UserModel;
