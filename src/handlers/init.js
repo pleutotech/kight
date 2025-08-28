@@ -3,6 +3,10 @@ import chalk from "chalk";
 import { execSync } from "child_process";
 import Handlebars from "handlebars";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * @param {any} options 
@@ -77,7 +81,9 @@ export default function InitProject(projectName, options) {
   console.log(chalk.blueBright(`Generating backend files...`));
   const backendFiles = getBackendFiles(options);
   backendFiles.forEach(file => {
-    const templateSrc = fs.readFileSync(file.templatePath, "utf-8");
+    const templatePath = path.join(__dirname, "../../", file.templatePath);
+
+    const templateSrc = fs.readFileSync(templatePath, "utf-8");
     const template = Handlebars.compile(templateSrc);
     const content = template({ projectName });
 
