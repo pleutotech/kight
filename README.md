@@ -30,4 +30,45 @@ kight init <project-name> --postgres --auth
 ```
 Note: When using --auth with PostgreSQL, Kight will automatically create a migration for the users table under the `migrations/` folder. 
 
+### Folder Structure
+Kight uses a simple and scalable folder structure. Here's an outline of what it looks like:
+```
+src/
+|- api/
+|   |- <feature>/
+|   |   |- <feature>.controller.ts
+|   |   |- <feature>.routes.ts
+|   |- routes.ts
+|
+|- db/
+|   |- pool.db.ts
+|   |- sql_model.db.ts
+|
+|- models/
+|   |- <model>.model.ts
+|
+|- utils/
+|   |- <util>.util.ts
+|
+|- middlewares/
+|   |- <middleware>.middleware.ts
+|
+|- server.ts
+
+types/
+|- <name>.d.ts
+
+migrations/
+|- <migration_name>.js
+```
+- `src/api/` contains the REST API.
+- `src/api/routes.ts` if where all the api routes live.
+- `src/db/` (postgres only) contains the data pool and sql_model class.
+- `src/models/` contains all the models.
+- `src/utils/` contains all the utility classes.
+- `src/middlewares/` contains all the middlewares.
+- `types/` contains additional type definitions.
+- `migrations/` (postgres only) contains the migrations created by `db-migrate`.
+- `src/server.ts` is the main entry point.
+
 #### More updates coming soon!
