@@ -23,6 +23,11 @@ const getBackendFiles = (options) => {
   files.push({ templatePath: "src/templates/tsconfig.json.hbs", filePath: "tsconfig.json" });
   files.push({ templatePath: "src/templates/api_response.util.ts.hbs", filePath: "src/utils/api_response.util.ts" });
 
+  if(!options.postgres && !options.mongo) {
+    files.push({ templatePath: "src/templates/server.ts.hbs", filePath: "src/server.ts" });
+    files.push({ templatePath: "src/templates/env_mongo.hbs", filePath: ".env" });
+  }
+
   if(options.mongo) {
     files.push({ templatePath: "src/templates/env_mongo.hbs", filePath: ".env" });
     files.push({ templatePath: "src/templates/server_mongo.ts.hbs", filePath: "src/server.ts" });
@@ -36,7 +41,7 @@ const getBackendFiles = (options) => {
     files.push({ templatePath: "src/templates/sql_model.db.ts.hbs", filePath: "src/db/sql_model.db.ts" });
   }
 
-  if(options.auth) {
+  if(options.auth && (options.postgres || options.mongo)) {
     files.push({ templatePath: "src/templates/auth/jwt.util.ts.hbs", filePath: "src/utils/jwt.util.ts" });
     files.push({ templatePath: "src/templates/auth/jwt_auth.middleware.ts.hbs", filePath: "src/middlewares/jwt_auth.middleware.ts" });
     files.push({ templatePath: "src/templates/auth/user.routes.ts.hbs", filePath: "src/api/user/user.routes.ts" });
@@ -73,12 +78,12 @@ export default function InitProject(projectName, options) {
     return;
   }
 
-  if(!options.mongo && !options.postgres) {
-    console.log(chalk.yellowBright(`Please use --postgres or --mongo to define the database to use.`));
+  if(options.auth && (!options.postgres && !options.mongo)) {
+    console.log(chalk.redBright(`--auth cannot be used without a database. Please use --postgres or --mongo.`));
     return;
   }
 
-  console.log(chalk.blueBright(`Generating backend files...`));
+  console.log(chalk.blueBright(`Generating files...`));
   const backendFiles = getBackendFiles(options);
   backendFiles.forEach(file => {
     const templatePath = path.join(__dirname, "../../", file.templatePath);

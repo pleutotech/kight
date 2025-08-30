@@ -8,7 +8,7 @@ const program = new Command();
 program
     .name("Kight")
     .description("Fly through projects")
-    .version("0.1.3");
+    .version("0.1.4");
 
 program
     .command("init <projectname>")
