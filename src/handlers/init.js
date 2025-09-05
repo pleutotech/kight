@@ -19,9 +19,15 @@ const getBackendFiles = (options) => {
   files.push({ templatePath: "src/templates/gitignore.hbs", filePath: ".gitignore" });
   files.push({ templatePath: "src/templates/nodemon.json.hbs", filePath: "nodemon.json" });
   files.push({ templatePath: "src/templates/package.json.hbs", filePath: "package.json" });
-  files.push({ templatePath: "src/templates/routes.ts.hbs", filePath: "src/api/routes.ts" });
   files.push({ templatePath: "src/templates/tsconfig.json.hbs", filePath: "tsconfig.json" });
   files.push({ templatePath: "src/templates/api_response.util.ts.hbs", filePath: "src/utils/api_response.util.ts" });
+
+  if(options.auth) {
+    files.push({ templatePath: "src/templates/routes_auth.ts.hbs", filePath: "src/api/routes.ts" });
+  }
+  else {
+    files.push({ templatePath: "src/templates/routes.ts.hbs", filePath: "src/api/routes.ts" });
+  }
 
   if(!options.postgres && !options.mongo) {
     files.push({ templatePath: "src/templates/server.ts.hbs", filePath: "src/server.ts" });
@@ -35,7 +41,7 @@ const getBackendFiles = (options) => {
   
   if(options.postgres) {
     files.push({ templatePath: "src/templates/env.hbs", filePath: ".env" });
-    files.push({ templatePath: "src/templates/database.json.hbs", filePath: "database.json" });
+    files.push({ templatePath: "src/templates/knexfile.js.hbs", filePath: "knexfile.js" });
     files.push({ templatePath: "src/templates/pool.db.ts.hbs", filePath: "src/db/pool.db.ts" });
     files.push({ templatePath: "src/templates/server.ts.hbs", filePath: "src/server.ts" });
     files.push({ templatePath: "src/templates/sql_model.db.ts.hbs", filePath: "src/db/sql_model.db.ts" });
@@ -55,7 +61,7 @@ const getBackendFiles = (options) => {
     if(options.postgres) {
       files.push({ templatePath: "src/templates/auth/postgres/user.controller.ts.hbs", filePath: "src/api/user/user.controller.ts" });
       files.push({ templatePath: "src/templates/auth/postgres/user.model.ts.hbs", filePath: "src/models/user.model.ts" });
-      files.push({ templatePath: "src/templates/auth/postgres/user.migration.hbs", filePath: `migrations/${timestamp}-create-users-table.js` });
+      files.push({ templatePath: "src/templates/auth/postgres/user.migration.hbs", filePath: `migrations/${timestamp}_create_users_table.js` });
     }
   }
 
@@ -100,9 +106,9 @@ export default function InitProject(projectName, options) {
   
   // Installing dependencies in backend
   let dependencies = "npm install express cors helmet morgan dotenv";
-  let devDependencies = "npm install -D typescript nodemon @types/node @types/express @types/cors @types/morgan";
+  let devDependencies = "npm install -D typescript nodemon ts-node @types/node @types/express @types/cors @types/morgan";
   if(options.postgres) {
-    dependencies += " db-migrate pg db-migrate-pg";
+    dependencies += " knex pg";
     devDependencies += " @types/pg";
   }
   if(options.mongo) {
@@ -127,11 +133,7 @@ export default function InitProject(projectName, options) {
   console.log(chalk.yellowBright(`\nNotes:`));
   console.log(chalk.yellowBright(`- Update the .env accordingly.`));
   if(options.postgres) {
-    console.log(chalk.yellowBright(`- Change database config in database.json.`));
-    console.log(chalk.yellowBright(`- Migrate the database using \`npx db-migrate up\``));
-  }
-  if(options.auth) {
-    console.log(chalk.yellowBright(`- You have generated the project with --auth, don't forget to import and use the UserRoutes() in api/routes.ts`));
+    console.log(chalk.yellowBright(`- Migrate the database using \`npx knex migrate:latest\``));
   }
 
   console.log(chalk.greenBright("\nHAVE FUN!"));
