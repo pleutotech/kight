@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import ApiResponse from "../utils/api_response.util.js";
-import JwtUtil from "../utils/jwt.util.js";
+import ApiResponse from "../utils/api_response.util";
+import JwtUtil from "../utils/jwt.util";
 
 export default function JwtAuth() {
     return (req: Request, res: Response, next: NextFunction) => {

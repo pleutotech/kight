@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import ApiResponse from "../../utils/api_response.util.js";
-import UserModel, { type IUser } from "../../models/user.model.js";
+import ApiResponse from "../../utils/api_response.util";
+import UserModel, { type IUser } from "../../models/user.model";
 import bcrypt from "bcryptjs";
-import JwtUtil from "../../utils/jwt.util.js";
+import JwtUtil from "../../utils/jwt.util";
 
 export default class UserController {
     static async create(req: Request, res: Response) {

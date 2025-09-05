@@ -4,7 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import mongoose from "mongoose";
-import ApiRoutes from "./api/routes.js";
+import ApiRoutes from "./api/routes";
 
 mongoose.connect(process.env.DATABASE_URL!)
 .then(() => {
